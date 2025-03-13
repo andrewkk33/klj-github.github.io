@@ -3,30 +3,127 @@
 <head>
     <title>保费计算器</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; }
-        input, button { margin: 10px 0; padding: 8px; }
-        .result { margin-top: 20px; color: #2c3e50; font-weight: bold; }
-        .error { color: #c0392b; }
+        /* 优化版样式 */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            padding: 20px;
+            background: #f0f3f5;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        h3 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin: 0 0 25px 0;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .fixed-params {
+            background: #f8fafb;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .fixed-params p {
+            font-size: 16px;
+            color: #666;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+        
+        input[type="date"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 18px 0;
+            background: white;
+        }
+        
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(52,152,219,0.2);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 4px rgba(52,152,219,0.2);
+        }
+        
+        .result {
+            background: #f8fafb;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 18px;
+            color: #27ae60;
+            border-left: 5px solid #27ae60;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .error {
+            background: #fff5f5;
+            padding: 16px;
+            color: #c0392b;
+            border-radius: 8px;
+            border-left: 5px solid #c0392b;
+            margin: 18px 0;
+            animation: shake 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(8px); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(4px); }
+            75% { transform: translateX(-4px); }
+            100% { transform: translateX(0); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h3>增员保费计算器</h3>
+        <h3>👥 增员保费计算器</h3>
         
-        <!-- 固定参数显示 -->
         <div class="fixed-params">
-            <p>保单到期日：2025-05-11</p>
-            <p>每人每天保费：2.2元</p>
+            <p>📅 保单到期日：2025-05-11</p>
+            <p>💰 每人每天保费：2.2元</p>
         </div>
 
-        <!-- 输入区域 -->
-        <label>输入增员生效日期：</label>
+        <label>请选择增员生效日期：</label>
         <input type="date" id="effectiveDate" required>
-        <button onclick="calculate()">立即计算</button>
+        <button onclick="calculate()">🚀 立即计算</button>
         
-        <!-- 结果显示 -->
         <div class="result" id="result"></div>
         <div class="error" id="error"></div>
     </div>
@@ -48,8 +145,13 @@ function calculate() {
     resultDiv.innerHTML = '';
 
     // 日期有效性验证
+    if (!effectiveDate.getTime()) {
+        errorDiv.innerHTML = '⚠️ 请选择有效日期';
+        return;
+    }
+    
     if (effectiveDate > FIXED_PARAMS.policyEndDate) {
-        errorDiv.innerHTML = '错误：生效日期不能晚于保单到期日';
+        errorDiv.innerHTML = '❌ 错误：生效日期不能晚于保单到期日';
         return;
     }
 
@@ -60,10 +162,10 @@ function calculate() {
     // 计算应缴保费
     const premium = remainingDays * FIXED_PARAMS.dailyPremium;
 
-    // 显示结果
+    // 显示结果（四舍五入到小数点后1位）
     resultDiv.innerHTML = `
-        剩余承保天数：${remainingDays}天<br>
-        应增保费金额：¥${premium.toFixed(2)}元/人
+        📅 剩余承保天数：<strong>${remainingDays}</strong> 天<br>
+        💵 应增保费金额：<strong>¥${premium.toFixed(2)}</strong> 元/人
     `;
 }
 </script>
