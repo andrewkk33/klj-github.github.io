@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>保费计算器</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; }
+        input, button { margin: 10px 0; padding: 8px; }
+        .result { margin-top: 20px; color: #2c3e50; font-weight: bold; }
+        .error { color: #c0392b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>增员保费计算器</h3>
+        
+        <!-- 固定参数显示 -->
+        <div class="fixed-params">
+            <p>保单到期日：2025-05-11</p>
+            <p>每人每天保费：2.2元</p>
+        </div>
+
+        <!-- 输入区域 -->
+        <label>输入增员生效日期：</label>
+        <input type="date" id="effectiveDate" required>
+        <button onclick="calculate()">立即计算</button>
+        
+        <!-- 结果显示 -->
+        <div class="result" id="result"></div>
+        <div class="error" id="error"></div>
+    </div>
+
+<script>
+// 固定参数配置
+const FIXED_PARAMS = {
+    policyEndDate: new Date('2025-05-11'),  // 保单到期日
+    dailyPremium: 2.19153175591532          // 每人每天保费
+}
+
+function calculate() {
+    const effectiveDate = new Date(document.getElementById('effectiveDate').value);
+    const resultDiv = document.getElementById('result');
+    const errorDiv = document.getElementById('error');
+    
+    // 清空提示
+    errorDiv.innerHTML = '';
+    resultDiv.innerHTML = '';
+
+    // 日期有效性验证
+    if (effectiveDate > FIXED_PARAMS.policyEndDate) {
+        errorDiv.innerHTML = '错误：生效日期不能晚于保单到期日';
+        return;
+    }
+
+    // 计算剩余天数（包含生效当天）
+    const timeDiff = FIXED_PARAMS.policyEndDate - effectiveDate;
+    const remainingDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+
+    // 计算应缴保费
+    const premium = remainingDays * FIXED_PARAMS.dailyPremium;
+
+    // 显示结果
+    resultDiv.innerHTML = `
+        剩余承保天数：${remainingDays}天<br>
+        应增保费金额：¥${premium.toFixed(1)}元/人
+    `;
+}
+</script>
+</body>
+</html>
